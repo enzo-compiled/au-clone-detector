@@ -1,2 +1,2 @@
 # nau-clone-detector
-Application of anti-uniifcation algorithm (Nominal) for clone software detection
+Application of anti-unification algorithm (Nominal) for clone software detection
