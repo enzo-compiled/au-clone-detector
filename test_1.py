@@ -1,7 +1,1 @@
-def funcion():
-    return 1
-
-print("hola!")
-a = funcion()
-
-print(f"la funcion retorna: {a}!")
+a = (1 + 2 + 3)
