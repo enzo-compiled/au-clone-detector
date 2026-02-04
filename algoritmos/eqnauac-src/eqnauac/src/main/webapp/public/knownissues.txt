@@ -1,0 +1,1 @@
+*) The minimization step is not implemented. That is, the produced set of generalizations is complete but it includes generalizations that are not least general.

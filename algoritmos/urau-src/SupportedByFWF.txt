@@ -1,0 +1,10 @@
+
+Supported by the Austrian Science Fund (FWF) under the project SToUT P 24087-N18
+
+Web page: http://www.fwf.ac.at/
+Project page: http://www.risc.jku.at/projects/stout/
+
+SToUT: Symbolic Computation Techniques for Unranked Terms
+Project leader: Temur Kutsia
+Research Institute for Symbolic Computation
+Johannes Kepler University Linz
