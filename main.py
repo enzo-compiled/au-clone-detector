@@ -1,27 +1,33 @@
-import ast, astor, subprocess
+import ast, subprocess
+from nominalCall import Collector
+"""a= open("test_1.py", 'r')
+f = a.read()
 
-rutaNom = "algoritmos\eqnauac-src\eqnauac\eqnauac-lib.jar"
+fa = ast.parse(f)
+collector = Collector()
+collector.visit(fa)"""
+
+
+rutaNom = "algoritmos/eqnauac-src/eqnauac/eqnauac-lib.jar"
 var1 = "java"
 var2 = "AU"
-var3 = "SIMPLE"
-problem1 = "f(print(\"hola\"),b,d)"
-problem2 = "f(print(\"hola\"),b,c)"
+var3 = ["SIMPLE", "VERBOSE", "PROGRESS", "ALL", "SILENT"] 
+problem1 = "f([a])"
+problem2 = "f([a])"
 
-def main():
-    """with open("test_1.py","r") as f:
-        file = f.read()
-        tree = ast.parse(file).body[0]
-        print(astor.dump_tree(tree))"""
-    subprocess.run(cmd)
 
 cmd = [
     var1,
     "-jar",
     rutaNom,
     var2,
-    var3,
+    var3[0],
     problem1 + " =^= " + problem2
 ]
+
+def main():
+    subprocess.run(cmd)
+
 
 if __name__ == "__main__":
     main()
