@@ -16,7 +16,7 @@ collector2.visit(p2)
 
 #pprint(collector1.data)
 
-rutaNom = "algoritmos/eqnauac-src/eqnauac/eqnauac-lib.jar"
+rutaNom = "algoritmos/eqnauac-lib.jar"
 var2 = "AU"
 var3 = "SIMPLE"
 

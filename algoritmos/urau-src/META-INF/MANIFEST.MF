@@ -1,0 +1,8 @@
+Manifest-Version: 1.0
+Ant-Version: Apache Ant 1.8.4
+Created-By: 1.6.0_27-b27 (Sun Microsystems Inc.)
+Built-By: alex
+Implementation-Vendor: Research Institute for Symbolic Computation
+Implementation-Title: Anti-Unification for Unranked Terms and Hedges
+Implementation-Version: 1.0
+
