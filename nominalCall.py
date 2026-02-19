@@ -21,31 +21,31 @@ class Collector(ast.NodeVisitor):
             return self.handle_constant(node)
 
         elif isinstance(node, ast.Name):
-            return f"a{node.id}"
+            return f"{node.id}"
 
         elif isinstance(node, ast.BinOp): #ej 1 + 2 + 3 = Add(Add(1,2),3)
             left = self.build_term(node.left)
             right = self.build_term(node.right)
             op = type(node.op).__name__
-            return f"{op}({left},{right})"
+            return f"g{op}({left},{right})"
 
         elif isinstance(node, ast.UnaryOp):
             operand = self.build_term(node.operand)
             op = type(node.op).__name__
-            return f"{op}({operand})"
+            return f"g{op}({operand})"
 
         elif isinstance(node, ast.BoolOp):
             values = [self.build_term(v) for v in node.values]
             op = type(node.op).__name__
-            return f"{op}(" + ",".join(values) + ")"
+            return f"g{op}(" + ",".join(values) + ")"
 
         elif isinstance(node, ast.Call):
             func = self.build_term(node.func)
             args = [self.build_term(a) for a in node.args]
-            return f"{func}(" + ",".join(args) + ")"
+            return f"f{func}(" + ",".join(args) + ")"
 
         else:
-            return "aUNKNOWN"
+            return "bNone"
 
     def handle_constant(self, node): #conversion 1 -> a1, 2 -> a2, etc
         value = node.value

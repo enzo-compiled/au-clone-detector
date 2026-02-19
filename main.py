@@ -8,7 +8,7 @@ collector = Collector()
 collector.visit(fa)"""
 
 
-rutaNom = "algoritmos/eqnauac-src/eqnauac/eqnauac-lib.jar"
+rutaNom = "algoritmos/eqnauac-lib.jar"
 var1 = "java"
 var2 = "AU"
 var3 = ["SIMPLE", "VERBOSE", "PROGRESS", "ALL", "SILENT"] 

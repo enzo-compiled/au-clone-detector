@@ -1,13 +1,6 @@
 a = (1 + 2 + 3)
-b = 3/1
-h=1
-h+=10
-print(a + b)
-print("==========")
-def sumar(valor:int):
-    a = valor * 2
-    return a
-c = sumar(a)
-e = a if b else c
-print(e)
-print(f"el valor de c es: {c}")
+def funcion(value):
+    print("es valor es:", value)
+
+variable = a
+funcion(a)

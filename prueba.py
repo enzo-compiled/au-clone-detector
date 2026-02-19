@@ -1,3 +1,15 @@
+"""import subprocess
+#comandoAyuda = "java "algoritmos/urau-src/src/at/jku/risc/stout/urau/AntiUnifyMain.java" -h"
+path = "algoritmos/urau-src/src/at/jku/risc/stout/urau/AntiUnifyMain.java"
+problem = "f(a,b,c,d) =^= f(a,b,c)"
+cmd = [
+    "java",
+    path,
+    "-a",
+    problem
+]
+subprocess.run(cmd)"""
+
 import subprocess, ast
 from nominalCall import Collector
 from pprint import pprint
@@ -16,9 +28,8 @@ collector2.visit(p2)
 
 #pprint(collector1.data)
 
-rutaNom = "algoritmos/eqnauac-lib.jar"
-var2 = "AU"
-var3 = "SIMPLE"
+rutaNom = "algoritmos/urau-src/src/at/jku/risc/stout/urau/AntiUnifyMain.java"
+var2 = "-a"
 
 def serialize_data(astt):
     lines = []
@@ -27,7 +38,7 @@ def serialize_data(astt):
         args = ", ".join(func.get("args", []))
         body = ", ".join(func.get("body", []))
 
-        lines.append(f"h{func['name']}({args},{body})")
+        lines.append(f"fFUNC(a{func['name']},{args},{body})")
 
     for call in astt.get("calls", []):
         lines.append(call["term"])  
@@ -51,7 +62,7 @@ def a_cmd(lines1, lines2):
     a1 = "fPROG(" + ", ".join(lines1) + ")"
     a2 = "fPROG(" + ", ".join(lines2) + ")"
 
-    problema = a1 + "=" + a2
+    problema = a1 + "=^=" + a2
     problema = problema.replace(" ", "")
 
     print("EQUATION:")
@@ -60,10 +71,8 @@ def a_cmd(lines1, lines2):
 
     cmd = [
         "java",
-        "-jar",
         rutaNom,
         var2,
-        var3,
         problema
     ]
 
