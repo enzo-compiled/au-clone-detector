@@ -17,8 +17,8 @@ collector2.visit(p2)
 #pprint(collector1.data)
 
 rutaNom = "algoritmos/eqnauac-lib.jar"
-var2 = "AU"
-var3 = "SIMPLE"
+arg_1 = "AU"
+arg_2 = "SIMPLE"
 
 def serialize_data(astt):
     lines = []
@@ -27,7 +27,7 @@ def serialize_data(astt):
         args = ", ".join(func.get("args", []))
         body = ", ".join(func.get("body", []))
 
-        lines.append(f"h{func['name']}({args},{body})")
+        lines.append(f"{func['name']}({args},{body})")
 
     for call in astt.get("calls", []):
         lines.append(call["term"])  
@@ -45,26 +45,38 @@ pprint(serialize_data(collector1.data))
 def a_cmd(lines1, lines2):
 
     if not lines1 or not lines2:
-        print("No hay términos para comparar")
+        print("Please insert both codes!")
         return
 
-    a1 = "fPROG(" + ", ".join(lines1) + ")"
-    a2 = "fPROG(" + ", ".join(lines2) + ")"
+    max_args = max(len(lines1), len(lines2))
+    
+    while len(lines1) < max_args:
+        lines1.append(" null")
+        
+    while len(lines2) < max_args:
+        lines2.append(" null")
 
-    problema = a1 + "=" + a2
-    problema = problema.replace(" ", "")
+    a1 = "f(" + ", ".join(lines1) + ")"
+    a2 = "f(" + ", ".join(lines2) + ")"
+
+    arg_3 = a1 + "=^=" + a2
+    arg_3 = arg_3.replace(" ", "")
+    
 
     print("EQUATION:")
-    pprint(problema)
-    print(type(problema))
+    pprint(arg_3)
+    print(type(arg_3))
 
     cmd = [
         "java",
         "-jar",
         rutaNom,
-        var2,
-        var3,
-        problema
+        arg_1,
+        arg_2,
+        arg_3,
+        "",
+        "Add, Mul",
+        "Add, Mul"
     ]
 
     subprocess.run(cmd)

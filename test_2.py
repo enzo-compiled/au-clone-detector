@@ -4,3 +4,7 @@ def funcion(value):
 
 variable = a
 funcion(a)
+
+class hola():
+    def __init__(self):
+        self.dato = 1

@@ -1,4 +1,4 @@
-import ast, astor
+import ast
 
 class Collector(ast.NodeVisitor):
     def __init__(self):
@@ -27,25 +27,27 @@ class Collector(ast.NodeVisitor):
             left = self.build_term(node.left)
             right = self.build_term(node.right)
             op = type(node.op).__name__
-            return f"g{op}({left},{right})"
+            return f"{op}({left},{right})"
 
         elif isinstance(node, ast.UnaryOp):
             operand = self.build_term(node.operand)
             op = type(node.op).__name__
-            return f"g{op}({operand})"
+            return f"{op}({operand})"
 
         elif isinstance(node, ast.BoolOp):
             values = [self.build_term(v) for v in node.values]
             op = type(node.op).__name__
-            return f"g{op}(" + ",".join(values) + ")"
+            long = len(values)
+            return f"{op}_{long}(" + ",".join(values) + ")"
 
         elif isinstance(node, ast.Call):
             func = self.build_term(node.func)
             args = [self.build_term(a) for a in node.args]
-            return f"f{func}(" + ",".join(args) + ")"
+            long = len(args)
+            return f"{func}_{long}(" + ",".join(args) + ")"
 
         else:
-            return "bNone"
+            return "null"
 
     def handle_constant(self, node): #conversion 1 -> a1, 2 -> a2, etc
         value = node.value
@@ -61,11 +63,11 @@ class Collector(ast.NodeVisitor):
     def visit_Assign(self, node):
         for target in node.targets:
             if isinstance(target, ast.Name):
-                t = f"a{target.id}"
+                t = f"{target.id}"
                 v = self.build_term(node.value)
 
                 self.data["assign"].append({
-                    "term": f"fASSIGN({t},{v})"
+                    "term": f"assign({t},{v})"
                 })
 
         self.generic_visit(node)
@@ -74,11 +76,11 @@ class Collector(ast.NodeVisitor):
     #class ast.AugAssign(target, op, value)
     def visit_AugAssign(self, node):
         if isinstance(node.target, ast.Name):
-            t = f"a{node.target.id}"
+            t = f"{node.target.id}"
             right = self.build_term(node.value)
             op = type(node.op).__name__
 
-            term = f"fASSIGN({t},{op}({t},{right}))"
+            term = f"assign({t},{op}({t},{right}))"
 
             self.data["assign"].append({
                 "term": term
@@ -90,11 +92,11 @@ class Collector(ast.NodeVisitor):
     #class ast.AnnAssign(target, annotation, value, simple)
     def visit_AnnAssign(self, node):
         if isinstance(node.target, ast.Name) and node.value:
-            t = f"a{node.target.id}"
+            t = f"{node.target.id}"
             v = self.build_term(node.value)
 
             self.data["assign"].append({
-                "term": f"fASSIGN({t},{v})"
+                "term": f"assign({t},{v})"
             })
 
         self.generic_visit(node)
@@ -110,10 +112,10 @@ class Collector(ast.NodeVisitor):
     #class ast.FunctionDef(name, args, body, decorator_list, returns, type_comment, type_params) 
     def visit_FunctionDef(self, node):
         body_terms = [self.build_term(expr) for expr in node.body]
-
+        args_names = [i.arg for i in node.args.args]
         self.data["func"].append({
-            "name": node.name,
-            "args": [i.arg for i in node.args.args],
+            "name": f"{node.name}_{len(args_names)}",
+            "args": args_names,
             "body": body_terms
         })
 
@@ -155,7 +157,7 @@ class Collector(ast.NodeVisitor):
         term += f"[{','.join(body)}],[{','.join(orelse)}])"
 
         self.data["controlflow"].append({
-            "type": "cif",
+            "type": "if",
             "term": term
         })
 
@@ -171,7 +173,7 @@ class Collector(ast.NodeVisitor):
         term = f"For({target},{iterator},[{','.join(body)}])"
 
         self.data["controlflow"].append({
-            "type": "cfor",
+            "type": "for",
             "term": term
         })
 
@@ -186,7 +188,7 @@ class Collector(ast.NodeVisitor):
         term = f"While({test},[{','.join(body)}])"
 
         self.data["controlflow"].append({
-            "type": "cwhile",
+            "type": "while",
             "term": term
         })
 
@@ -201,7 +203,7 @@ class Collector(ast.NodeVisitor):
         term = f"IfExp({test},{body},{orelse})"
 
         self.data["controlflow"].append({
-            "type": "cIfExp",
+            "type": "IfExp",
             "term": term
         })
 
