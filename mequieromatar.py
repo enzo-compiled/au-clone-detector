@@ -96,4 +96,3 @@ a_cmd(lines1,lines2)
 
 """print(out)
 print(err)"""
-
