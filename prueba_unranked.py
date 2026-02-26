@@ -32,25 +32,6 @@ rutaNom = "algoritmos/urau-src/src/at/jku/risc/stout/urau/AntiUnifyMain.java"
 var2 = "-a"
 
 def serialize_data(astt):
-    """lines = []
-
-    for func in astt.get("func", []):
-        if func['args']:
-            args = ", ".join(func.get("args", []))
-            body = ", ".join(func.get("body", []))
-            lines.append(f"{func['name']}({args},{body})")
-        else:
-            lines.append(f"{func['name']}()")
-
-    for call in astt.get("calls", []):
-        if call['term']:
-            lines.append(call["term"])  
-
-    for assign in astt.get("assign", []):
-        if "term" in assign:
-            lines.append(assign["term"])
-
-    return lines"""
     return [line for line in astt if line]
 
 
@@ -67,12 +48,6 @@ def a_cmd(lines1, lines2):
     a2 =  ", ".join(lines2)
 
     problema = a1 + "=^=" + a2
-    #problema = problema.replace(" ", "")
-    #problema = "assign(a,Add(1,5)) =^= assign(b,1)"
-
-    """print("ecuacion:")
-    pprint(problema)
-    print(type(problema))"""
 
     cmd = [
         "java",

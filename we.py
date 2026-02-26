@@ -52,7 +52,7 @@ def parse_nau_output(output):
 
 
 
-def main():
+def we():
     #subprocess.run(cmd)
     result = subprocess.run(cmd, capture_output=True, text=True)
     if result.stdout:
@@ -61,5 +61,4 @@ def main():
         print(best_abs)
 
 
-if __name__ == "__main__":
-    main()
+we()

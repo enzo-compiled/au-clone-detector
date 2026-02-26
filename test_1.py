@@ -8,6 +8,6 @@ def sumar(valor:int):
     a = valor * 2
     return a
 c = sumar(a)
-e = a if b else c
+e = a
 print(e)
 print(f"el valor de c es: {c}")

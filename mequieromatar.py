@@ -21,7 +21,7 @@ arg_1 = "AU"
 arg_2 = "SIMPLE"
 
 def serialize_data(astt):
-    lines = []
+    """lines = []
 
     for func in astt.get("func", []):
         args = ", ".join(func.get("args", []))
@@ -34,9 +34,9 @@ def serialize_data(astt):
 
     for assign in astt.get("assign", []):
         if "term" in assign:
-            lines.append(assign["term"])
+            lines.append(assign["term"])"""
 
-    return lines
+    return [line for line in astt if line]
 
 
 pprint(serialize_data(collector1.data))
@@ -48,19 +48,24 @@ def a_cmd(lines1, lines2):
         print("Please insert both codes!")
         return
 
-    max_args = max(len(lines1), len(lines2))
+    """max_args = max(len(lines1), len(lines2))
     
     while len(lines1) < max_args:
         lines1.append(" null")
         
     while len(lines2) < max_args:
-        lines2.append(" null")
+        lines2.append(" null")"""
+    
+    limpiar = lambda lista: [line for line in lista if line and line != "null" and line != "None"]
+    
+    l1 = limpiar(lines1)
+    l2 = limpiar(lines2)
 
-    a1 = "f(" + ", ".join(lines1) + ")"
-    a2 = "f(" + ", ".join(lines2) + ")"
+    l11 = f"secuencia({', '.join(l1)})"
+    l22 = f"secuencia({', '.join(l2)})"
 
-    arg_3 = a1 + "=^=" + a2
-    arg_3 = arg_3.replace(" ", "")
+    arg_3 = f"f({l11}) =^= f({l22})"
+    #arg_3 = arg_3.replace(" ", "")
     
 
     print("EQUATION:")
@@ -75,8 +80,8 @@ def a_cmd(lines1, lines2):
         arg_2,
         arg_3,
         "",
-        "Add, Mul",
-        "Add, Mul"
+        "Add, Mult",
+        "Add, Mult"
     ]
 
     subprocess.run(cmd)
