@@ -30,7 +30,7 @@ def main(page: ft.Page):
 
     def handle_link_highlight(e):
         e.control.style = ft.TextStyle(
-            decoration=ft.TextDecoration.UNDERLINE,
+            #decoration=ft.TextDecoration.UNDERLINE,
             color=ft.Colors.BLUE_700,
             weight=ft.FontWeight.BOLD,
             size=22,
@@ -39,7 +39,7 @@ def main(page: ft.Page):
 
     def handle_link_unhighlight(e):
         e.control.style = ft.TextStyle(
-            decoration=ft.TextDecoration.UNDERLINE,
+            #decoration=ft.TextDecoration.UNDERLINE,
             color=ft.Colors.BLUE_900,
             weight=ft.FontWeight.BOLD,
             size=22,
@@ -48,6 +48,8 @@ def main(page: ft.Page):
 
     def open_link(e):
         webbrowser.open("https://www3.risc.jku.at/projects/stout/library.html")
+    def open_link2(e):
+        webbrowser.open("https://risc.jku.at/m/alexander-baumgartner/")
 
     sobre_pag = ft.Text(
         spans=[
@@ -55,7 +57,7 @@ def main(page: ft.Page):
             ft.TextSpan(
                 "library of the algorithms",
                 style=ft.TextStyle(
-                    decoration=ft.TextDecoration.UNDERLINE,
+                    #decoration=ft.TextDecoration.UNDERLINE,
                     color=ft.Colors.BLUE_900,
                     weight=ft.FontWeight.BOLD,
                     size=22,
@@ -113,7 +115,7 @@ def main(page: ft.Page):
         "focused_border_color": ft.Colors.BLUE_600,
         "bgcolor": ft.Colors.with_opacity(0.3, ft.Colors.WHITE),
         "border_radius": 6,
-        "content_padding": ft.padding.symmetric(horizontal=12, vertical=10),
+        "content_padding": ft.Padding.symmetric(horizontal=12, vertical=10),
         "cursor_color": ft.Colors.BLUE_600,
         "width" : 700
     }
@@ -270,7 +272,7 @@ def main(page: ft.Page):
 
     boton = ft.Row(
         controls=[
-            ft.ElevatedButton(
+            ft.Button(
                 content="START",
                 style=ft.ButtonStyle(
                     color=ft.Colors.BLUE_GREY_700,
@@ -311,6 +313,141 @@ def main(page: ft.Page):
         expand=True
     )
 
+    check_iterate = ft.Checkbox(
+        label="ITERATE ALL POSSIBILITIES",
+        label_style=ft.TextStyle(
+            size=12,
+            color=ft.Colors.BLUE_GREY_600,
+            weight=ft.FontWeight.W_500,
+            letter_spacing=1.2,
+        ),
+        fill_color={
+            ft.ControlState.SELECTED: ft.Colors.BLUE_600,
+            ft.ControlState.DEFAULT: ft.Colors.TRANSPARENT,
+        },
+        border_side={
+            ft.ControlState.DEFAULT: ft.BorderSide(width=1, color=ft.Colors.BLUE_GREY_400),
+            ft.ControlState.SELECTED: ft.BorderSide(width=1, color=ft.Colors.BLUE_600),
+        },
+        check_color=ft.Colors.WHITE,
+        splash_radius=0,
+        label_position="LEFT"
+    )
+
+    parte1_uk = ft.Row(
+        controls=[
+            labeled_field("Output Mode", ft.Dropdown(
+                options=[
+                    ft.dropdown.Option(key="simple",text=arg_2[0]),
+                    ft.dropdown.Option(key="verbose",text=arg_2[1]),
+                    ft.dropdown.Option(key="progress",text=arg_2[2]),
+                ],
+                border_color=ft.Colors.BLUE_GREY_600,
+                focused_border_color=ft.Colors.BLUE_600,
+                bgcolor=ft.Colors.with_opacity(0.75, ft.Colors.WHITE),
+                border_radius=6,
+                content_padding=ft.padding.symmetric(horizontal=20, vertical=10),
+                expand=True,
+                hint_text="Select the mode",
+                width=300
+            )),
+            check_iterate,
+        ],
+        spacing=20,
+        #expand=False,
+        width=700
+    )
+
+    code1_block_uk = ft.Column(
+        controls=[
+            ft.Container(
+                content=ft.Text(
+                    "Code 1",
+                    size=13,
+                    weight=ft.FontWeight.BOLD,
+                    font_family="Poppins",
+                    color=ft.Colors.BLUE_GREY_700,
+                ),
+                bgcolor=ft.Colors.with_opacity(0.25, ft.Colors.WHITE),
+                border_radius=ft.border_radius.only(top_left=8, top_right=8),
+                padding=ft.padding.symmetric(horizontal=12, vertical=6),
+            ),
+            ft.TextField(**code_style), #** desmpaquetado
+        ],
+        spacing=0,
+        expand=True,
+    )
+
+    code2_block_uk = ft.Column(
+        controls=[
+            ft.Container(
+                content=ft.Text(
+                    "Code 2",
+                    size=13,
+                    weight=ft.FontWeight.BOLD,
+                    font_family="Poppins",
+                    color=ft.Colors.BLUE_GREY_700,
+                ),
+                bgcolor=ft.Colors.with_opacity(0.25, ft.Colors.WHITE),
+                border_radius=ft.border_radius.only(top_left=8, top_right=8),
+                padding=ft.padding.symmetric(horizontal=12, vertical=6),
+            ),
+            ft.TextField(**code_style),
+        ],
+        spacing=0,
+        expand=True,
+    )
+
+    parte3_uk = ft.Row(
+        controls=[code1_block_uk, code2_block_uk],
+        spacing=20,
+        expand=True,
+        alignment=ft.MainAxisAlignment.CENTER,
+        vertical_alignment=ft.CrossAxisAlignment.START,
+    )
+
+    boton_uk = ft.Row(
+        controls=[
+            ft.Button(
+                content="START",
+                style=ft.ButtonStyle(
+                    color=ft.Colors.BLUE_GREY_700,
+                    bgcolor=ft.Colors.with_opacity(0.25, ft.Colors.WHITE),
+                    overlay_color=ft.Colors.with_opacity(0.1, ft.Colors.BLUE_600),
+                    shadow_color=ft.Colors.TRANSPARENT,
+                    side=ft.BorderSide(width=1, color=ft.Colors.BLUE_GREY_400),
+                    shape=ft.RoundedRectangleBorder(radius=6),
+                    padding=ft.padding.symmetric(horizontal=40, vertical=14),
+                    text_style=ft.TextStyle(
+                        size=13,
+                        weight=ft.FontWeight.W_600,
+                        letter_spacing=2,
+                    ),
+                ),
+            )
+        ],
+        alignment=ft.MainAxisAlignment.CENTER,
+        )
+    
+    parte_output_uk = ft.Column(
+        controls=[
+            ft.Text("Output", font_family="Poppins",theme_style=ft.TextThemeStyle.LABEL_MEDIUM, size=22),
+            ft.TextField(**code_out)
+        ],
+    )
+
+    unranked_view = ft.Column(
+        controls=[
+            ft.Text("jejeje"),
+            centrar(parte1_uk),
+            parte3_uk,
+            boton_uk,
+            parte_output_uk
+        ],
+        scroll=ft.ScrollMode.ADAPTIVE,
+        expand=True
+    )
+
     page.add(
         ft.Tabs(
             selected_index=0,
@@ -335,8 +472,7 @@ def main(page: ft.Page):
                                 content=nominal_view,
                             ),
                             ft.Container(
-                                content=ft.Text("This is Tab 3"),
-                                alignment=ft.Alignment.CENTER,
+                                content=unranked_view,
                             ),
                         ],
                     ),
@@ -344,6 +480,59 @@ def main(page: ft.Page):
             ),
         )
     )
+
+    def handle_link_highlight2(e):
+        e.control.style = ft.TextStyle(
+            #decoration=ft.TextDecoration.UNDERLINE,
+            color=ft.Colors.BLUE_700,
+            weight=ft.FontWeight.BOLD,
+            size=11,
+        )
+        e.control.update()
+
+    def handle_link_unhighlight2(e):
+        e.control.style = ft.TextStyle(
+            color=ft.Colors.BLUE_GREY_600,
+            weight=ft.FontWeight.BOLD,
+            size=11,
+            #decoration=ft.TextDecoration.UNDERLINE,
+        )
+        e.control.update()
+
+    creditos = sobre_pag = ft.Text(
+        spans=[
+            ft.TextSpan("Developed by Enzo V. Cornejo and guided by "),  
+            ft.TextSpan(
+                "Alexander Baumgartner",
+                style=ft.TextStyle(
+                size=11,
+                color=ft.Colors.BLUE_GREY_600,
+                weight=ft.FontWeight.BOLD,
+                #decoration=ft.TextDecoration.UNDERLINE,
+            ),
+                on_click=open_link2,
+                on_enter=handle_link_highlight2,
+                on_exit=handle_link_unhighlight2,
+            ),
+        ],
+        style=ft.TextStyle(
+            size=11,
+            color=ft.Colors.BLUE_GREY_300,
+            letter_spacing=1.2,
+            weight=ft.FontWeight.W_400,
+        ),
+    )
+    page.add(ft.Container(
+        content=ft.Row(
+            controls=[creditos],
+            alignment=ft.MainAxisAlignment.START,
+        ),
+        bgcolor=ft.Colors.BLUE_GREY_300,
+        padding=ft.padding.symmetric(vertical=8),
+        expand=False,
+        height=35, 
+        border=ft.border.only(top=ft.BorderSide(width=1, color=ft.Colors.BLUE_GREY_500)), 
+    ))
 
 
 if __name__ == "__main__":

@@ -9,7 +9,7 @@ cmd = [
     problem
 ]
 subprocess.run(cmd)"""
-
+#largo_llamado = java -Xmx2048m -Xss128m -cp algoritmos/urau-src/urau.jar:/tmp/urau-out at.jku.risc.stout.urau.AntiUnifyMain -a -m 3 -f "at.jku.risc.stout.urau.algo.RigidityFncSubstring" "f(a,b) =^= f(a,b,c)"
 import subprocess, ast
 from unrankedCall import Collector2
 from pprint import pprint
