@@ -19,10 +19,14 @@ dev = [
 ]
 
 [tool.flet]
-org = "com.mycompany"
+org = ""
 product = "nau-clone-detector"
-company = "Flet"
-copyright = "Copyright (C) 2023-2026 by Flet"
+company = "Enzo V. Cornejo"
+copyright = "Copyright (C) 2026 Enzo V. Cornejo"
+
+[build-system]
+requires = ["setuptools>=64"]
+build-backend = "setuptools.build_meta"
 
 [tool.flet.app]
 path = "src"
