@@ -11,7 +11,7 @@ cmd = [
 subprocess.run(cmd)"""
 #largo_llamado = java -Xmx2048m -Xss128m -cp algoritmos/urau-src/urau.jar:/tmp/urau-out at.jku.risc.stout.urau.AntiUnifyMain -a -m 3 -f "at.jku.risc.stout.urau.algo.RigidityFncSubstring" "f(a,b) =^= f(a,b,c)"
 import subprocess, ast
-from unrankedCall import Collector2
+from collectors.unrankedCall import Collector2
 from pprint import pprint
 
 r = open("test_1.py", "r")
@@ -46,7 +46,7 @@ def a_cmd(lines1, lines2):
 
     a1 =  ", ".join(lines1) 
     a2 =  ", ".join(lines2)
-
+    print(a1)
     problema = a1 + "=^=" + a2
 
     cmd = [
@@ -55,7 +55,7 @@ def a_cmd(lines1, lines2):
         var2,
         problema
     ]
-
+    pprint(cmd)
     subprocess.run(cmd)
 
 

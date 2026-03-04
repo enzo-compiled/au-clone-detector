@@ -2,6 +2,7 @@ import flet as ft
 import subprocess
 from styles.theme import label_style, input_style, code_style, code_out
 from ui.components import labeled_field, start_button, centrar, code_block
+from collectors.parseCode import parse_CodeN
 
 class NominalView:
     def __init__(self, page: ft.Page):
@@ -9,7 +10,7 @@ class NominalView:
         self.page = page
         self.comboBoxNmodee = ft.Dropdown(
             width=250,
-            label="Mode",
+            #label="Mode",
             options=[
                 ft.dropdown.Option(key="simple", text="SIMPLE"),
                 ft.dropdown.Option(key="verbose", text="VERBOSE"),
@@ -31,30 +32,35 @@ class NominalView:
         self.field_code2 = ft.TextField(**code_style)
         self.field_output = ft.TextField(**code_out)
 
-    # --- lógica ---
     def on_start(self, e):
-        pass
-        """code1  = self.field_code1.value
-        code2  = self.field_code2.value
-        mode   = self.dropdown_mode.value
-        lines  = self.field_lines.value or "-1"
-        comm   = self.field_comm.value or ""
-        assoc  = self.field_assoc.value or ""
+        code1 = self.field_code1.value
+        code2 = self.field_code2.value
+        mode = self.comboBoxNmodee.value
+        lines = self.field_lines.value or "-1"
+        comm = self.field_comm.value or ""
+        assoc = self.field_assoc.value or ""
 
-        # llamada al algoritmo (adaptar según tu lógica)
+        problem = f"{str(parse_CodeN(code1))} =^= {str(parse_CodeN(code2))}"
+
+        #si assoc y comm están vacíos
+        if not assoc and not comm:
+            cmd = ["java", "-jar", "algoritmos/eqnauac-lib.jar",
+                "AU", mode.upper(), problema, "", "", "true", "false", lines]
+        else:
+            cmd = ["java", "-jar", "algoritmos/eqnauac-lib.jar",
+                "AU", mode.upper(), problem, "", assoc, comm, "", "true", "false", lines]
+
         try:
-            result = subprocess.run(
-                ["java", "-jar", "algoritmos/eqnauac-lib.jar",
-                 code1, code2, mode, lines, comm, assoc],
-                capture_output=True, text=True
-            )
+            result = subprocess.run(cmd,capture_output=True,text=True)
             self.field_output.value = result.stdout or result.stderr
+            #self.field_output.value = "esto es una prueba de como se ve"
         except Exception as ex:
             self.field_output.value = f"Error: {ex}"
 
-        self.field_output.update()"""
+        print(parse_CodeN(code1))
+        print(parse_CodeN(code2))
+        self.field_output.update()
 
-    # --- build ---
     def build(self):
         parte1 = ft.Row(
             controls=[

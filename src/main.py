@@ -6,7 +6,7 @@ from ui.unranked_view import UnrankedView
 
 def main(page: ft.Page):
     page.fonts = {"Poppins": "fonts/Poppins-Regular.ttf"}
-    page.theme = ft.Theme(font_family="Poppins")
+    page.theme = ft.Theme(font_family="Poppins") 
     page.title = "AU Clone Code Detector"
     page.theme_mode = ft.ThemeMode.LIGHT
     page.bgcolor = ft.Colors.BLUE_GREY_300
@@ -68,9 +68,9 @@ def main(page: ft.Page):
         ft.Container(
             content=ft.Row(controls=[creditos], alignment=ft.MainAxisAlignment.START),
             bgcolor=ft.Colors.BLUE_GREY_300,
-            padding=ft.padding.symmetric(horizontal=12, vertical=8),
+            padding=ft.Padding.symmetric(horizontal=12, vertical=8),
             height=35,
-            border=ft.border.only(top=ft.BorderSide(width=1, color=ft.Colors.BLUE_GREY_500)),
+            border=ft.Border.only(top=ft.BorderSide(width=1, color=ft.Colors.BLUE_GREY_500)),
         )
     )
 

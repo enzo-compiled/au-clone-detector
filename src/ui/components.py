@@ -17,12 +17,18 @@ def centrar(control):
         alignment=ft.MainAxisAlignment.CENTER,
     )
 
-def code_block(label, field):
+def code_block(label, field, botones=None):
     return ft.Column(
         controls=[
             ft.Container(
-                content=ft.Text(label, size=13, weight=ft.FontWeight.BOLD,
+                content=ft.Row(
+                    controls=[
+                        ft.Text(label, size=13, weight=ft.FontWeight.BOLD,
                                 font_family="Poppins", color=ft.Colors.BLUE_GREY_700),
+                        ft.Row(controls=botones or [], spacing=0) # ! agrega botones de reset y upload
+                    ],
+                    alignment=ft.MainAxisAlignment.SPACE_BETWEEN,
+                ),
                 bgcolor=ft.Colors.with_opacity(0.25, ft.Colors.WHITE),
                 border_radius=ft.border_radius.only(top_left=8, top_right=8),
                 padding=ft.padding.symmetric(horizontal=12, vertical=6),
@@ -38,7 +44,7 @@ def start_button(on_click):
         controls=[
             ft.Button(
                 content="START",
-                #on_click=on_click,
+                on_click=on_click,
                 style=ft.ButtonStyle(
                     color=ft.Colors.BLUE_GREY_700,
                     bgcolor=ft.Colors.with_opacity(0.25, ft.Colors.WHITE),
