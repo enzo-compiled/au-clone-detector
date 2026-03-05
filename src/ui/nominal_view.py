@@ -12,10 +12,10 @@ class NominalView:
             width=250,
             #label="Mode",
             options=[
-                ft.dropdown.Option(key="simple", text="SIMPLE"),
-                ft.dropdown.Option(key="verbose", text="VERBOSE"),
-                ft.dropdown.Option(key="progress", text="PROGRESS"),
-                ft.dropdown.Option(key="all", text="ALL")
+                ft.dropdown.Option(key="SIMPLE", text="SIMPLE"),
+                ft.dropdown.Option(key="VERBOSE", text="VERBOSE"),
+                ft.dropdown.Option(key="PROGRESS", text="PROGRESS"),
+                ft.dropdown.Option(key="ALL", text="ALL")
             ],
             border_color=ft.Colors.BLUE_GREY_600,
             focused_border_color=ft.Colors.BLUE_600,
@@ -26,8 +26,8 @@ class NominalView:
             hint_text="Select the mode"
         )
         self.field_lines = ft.TextField(hint_text="-1 = No limit", **input_style)
-        self.field_comm = ft.TextField(hint_text="Add, Mult...", **input_style)
-        self.field_assoc = ft.TextField(hint_text="Add, Mult...", **input_style)
+        self.field_comm = ft.TextField(hint_text="defect=Add, Mult", **input_style)
+        self.field_assoc = ft.TextField(hint_text="defect=Add, Mult", **input_style)
         self.field_code1 = ft.TextField(**code_style)
         self.field_code2 = ft.TextField(**code_style)
         self.field_output = ft.TextField(**code_out)
@@ -35,7 +35,7 @@ class NominalView:
     def on_start(self, e):
         code1 = self.field_code1.value
         code2 = self.field_code2.value
-        mode = self.comboBoxNmodee.value
+        mode = self.comboBoxNmodee.value or "SIMPLE"
         lines = self.field_lines.value or "-1"
         comm = self.field_comm.value or ""
         assoc = self.field_assoc.value or ""
@@ -43,23 +43,48 @@ class NominalView:
         problem = f"{str(parse_CodeN(code1))} =^= {str(parse_CodeN(code2))}"
 
         #si assoc y comm están vacíos
-        if not assoc and not comm:
+        if not assoc:
             cmd = ["java", "-jar", "algoritmos/eqnauac-lib.jar",
-                "AU", mode.upper(), problema, "", "", "true", "false", lines]
-        else:
+                "AU", mode, problem, "", "Add, Mult", "Add, Mult, " + comm, "true", "false", lines]
+        elif not comm:
             cmd = ["java", "-jar", "algoritmos/eqnauac-lib.jar",
-                "AU", mode.upper(), problem, "", assoc, comm, "", "true", "false", lines]
+                "AU", mode, problem, "", "Add, Mult, " + assoc, "Add, Mult", "true", "false", lines]
 
         try:
             result = subprocess.run(cmd,capture_output=True,text=True)
             self.field_output.value = result.stdout or result.stderr
-            #self.field_output.value = "esto es una prueba de como se ve"
         except Exception as ex:
             self.field_output.value = f"Error: {ex}"
 
         print(parse_CodeN(code1))
         print(parse_CodeN(code2))
         self.field_output.update()
+
+    def reset_code1(self, e=None):
+        self.field_code1.value = ""
+        self.field_code1.update()
+
+    def reset_code2(self, e=None):
+        self.field_code2.value = ""
+        self.field_code2.update()
+
+    async def open_picker_code1(self, e):
+        files = await ft.FilePicker().pick_files(
+            allowed_extensions=["py", "txt"]
+        )
+        if files:
+            with open(files[0].path, "r") as f:
+                self.field_code1.value = f.read()
+            self.field_code1.update()
+
+    async def open_picker_code2(self, e):
+        files = await ft.FilePicker().pick_files(
+            allowed_extensions=["py", "txt"]
+        )
+        if files:
+            with open(files[0].path, "r") as f:
+                self.field_code2.value = f.read()
+            self.field_code2.update()
 
     def build(self):
         parte1 = ft.Row(
@@ -80,10 +105,33 @@ class NominalView:
             width=700,
         )
 
+        def b_icon(icon, tooltip, on_click):
+            return ft.IconButton(
+                icon = icon,
+                icon_size=16,
+                icon_color=ft.Colors.BLUE_GREY_400,
+                tooltip=tooltip,
+                on_click=on_click,
+                style=ft.ButtonStyle(
+                    padding=ft.padding.all(4),
+                    overlay_color=ft.Colors.TRANSPARENT,
+                ),
+            )
+
+        bt1 = [
+            b_icon(ft.Icons.UPLOAD_FILE, "Load file", self.open_picker_code1),
+            b_icon(ft.Icons.CLOSE, "Clear", self.reset_code1)
+        ]
+
+        bt2 = [
+            b_icon(ft.Icons.UPLOAD_FILE, "Load file",  self.open_picker_code2),
+            b_icon(ft.Icons.CLOSE, "Clear", self.reset_code2),
+        ]
+
         parte3 = ft.Row(
             controls=[
-                code_block("Code 1", self.field_code1),
-                code_block("Code 2", self.field_code2),
+                code_block("Code 1", self.field_code1, botones=bt1),
+                code_block("Code 2", self.field_code2, botones=bt2),
             ],
             spacing=20,
             expand=True,

@@ -124,12 +124,11 @@ class Collector2(ast.NodeVisitor):
     #class ast.If(test, body, orelse)
     def visit_If(self, node):
         test = self.build_term(node.test)
-        # Usamos el filtro 'if t' para evitar los nulls internos
         body = [t for stmt in node.body if (t := self.build_term(stmt))]
         orelse = [t for stmt in node.orelse if (t := self.build_term(stmt))]
 
         term = f"if({test},[{','.join(body)}],[{','.join(orelse)}])"
-        self.data.append(term) # <--- Cambio clave
+        self.data.append(term)
         self.generic_visit(node)
 
 
@@ -140,7 +139,7 @@ class Collector2(ast.NodeVisitor):
         body = [t for stmt in node.body if (t := self.build_term(stmt))]
 
         term = f"for({target},{iterator},[{','.join(body)}])"
-        self.data.append(term) # <--- Cambio clave
+        self.data.append(term)
         self.generic_visit(node)
 
 
@@ -150,7 +149,7 @@ class Collector2(ast.NodeVisitor):
         body = [t for stmt in node.body if (t := self.build_term(stmt))]
 
         term = f"while({test},[{','.join(body)}])"
-        self.data.append(term) # <--- Cambio clave
+        self.data.append(term)
         self.generic_visit(node)
 
 

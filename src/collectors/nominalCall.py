@@ -1,5 +1,7 @@
 import ast
 
+# ! CONSIDERAR ABSTRACCIÓN (. dot) y quizás extra atoms.
+
 class Collector(ast.NodeVisitor):
     def __init__(self):
         self.data = [] #las lineas
