@@ -1,8 +1,6 @@
 import ast
 from collectors.nominalCall import Collector
 from collectors.unrankedCall import Collector2
-f = open("test_1.py")
-e = f.read()
 def parse_CodeN(file):
     code = ast.parse(file)
     collector = Collector()

@@ -44,10 +44,33 @@ class Collector2(ast.NodeVisitor):
             value = self.build_term(node.value)
             return f"{value}.{node.attr}"
 
+        elif isinstance(node, ast.Expr):
+            return self.build_term(node.value)
+
+        elif isinstance(node, ast.Assign):
+            t = self.build_term(node.targets[0])
+            v = self.build_term(node.value)
+            if t and v:
+                return f"assign({t},{v})"
+            return ""
+
+        elif isinstance(node, ast.FunctionDef):
+            args = [a.arg for a in node.args.args]
+            body = [t for s in node.body if (t := self.build_term(s))]
+            partes = args + body
+            return f"def_{node.name}({','.join(partes)})"
+        
+        elif isinstance(node, ast.Return):
+            if node.value:
+                v = self.build_term(node.value)
+            else:
+                v = ""
+            return f"return({v})"
+
         return ""
 
 
-    def handle_constant(self, node): #conversion 1 -> a1, 2 -> a2, etc
+    def handle_constant(self, node): 
         value = node.value
 
         if value not in self.const_map:
@@ -63,8 +86,6 @@ class Collector2(ast.NodeVisitor):
         v = self.build_term(node.value)
         self.data.append(f"assign({t},{v})")
 
-        self.generic_visit(node)
-
 
     #class ast.AugAssign(target, op, value)
     def visit_AugAssign(self, node):
@@ -74,18 +95,6 @@ class Collector2(ast.NodeVisitor):
         if t and right:
             self.data.append(f"assign({t},{op}({t},{right}))")
 
-        self.generic_visit(node)
-
-
-    #class ast.AnnAssign(target, annotation, value, simple)
-    def visit_AnnAssign(self, node):
-        if node.value:
-            t = self.build_term(node.target)
-            v = self.build_term(node.value)
-            self.data.append(f"assign({t},{v})")
-
-        self.generic_visit(node)
-
 
     #class ast.FunctionDef(name, args, body, decorator_list, returns, type_comment, type_params) 
     def visit_FunctionDef(self, node):
@@ -93,21 +102,16 @@ class Collector2(ast.NodeVisitor):
         body = [t for s in node.body if (t := self.build_term(s))]
         self.data.append(f"def_{node.name}({','.join(args)}{','.join(body)})")
 
-        self.generic_visit(node)
-
     def visit_Expr(self, node):
-        #Esto captura los print() sueltos que no son asignaciones
         term = self.build_term(node.value)
         if term:
             self.data.append(term)
-        self.generic_visit(node)
 
     #class ast.ClassDef(name, bases, keywords, body, decorator_list, type_params)
     def visit_ClassDef(self, node):
         body_terms = [t for stmt in node.body if (t := self.build_term(stmt))]
         term = f"class_{node.name}({','.join(body_terms)})"
         self.data.append(term)
-        self.generic_visit(node)
 
     def visit_Return(self, node):
         if node.value:
@@ -126,35 +130,24 @@ class Collector2(ast.NodeVisitor):
         test = self.build_term(node.test)
         body = [t for stmt in node.body if (t := self.build_term(stmt))]
         orelse = [t for stmt in node.orelse if (t := self.build_term(stmt))]
+        partes = [test] + body + orelse
+        self.data.append(f"if({','.join(partes)})")
 
-        term = f"if({test},[{','.join(body)}],[{','.join(orelse)}])"
-        self.data.append(term)
-        self.generic_visit(node)
-
-
-    #class ast.For(target, iter, body, orelse, type_comment)
     def visit_For(self, node):
         target = self.build_term(node.target)
         iterator = self.build_term(node.iter)
         body = [t for stmt in node.body if (t := self.build_term(stmt))]
+        self.data.append(f"for({target},{iterator},{','.join(body)})")
 
-        term = f"for({target},{iterator},[{','.join(body)}])"
-        self.data.append(term)
-        self.generic_visit(node)
-
-
-    #class ast.While(test, body, orelse)
     def visit_While(self, node):
         test = self.build_term(node.test)
         body = [t for stmt in node.body if (t := self.build_term(stmt))]
-
-        term = f"while({test},[{','.join(body)}])"
-        self.data.append(term)
-        self.generic_visit(node)
-
+        self.data.append(f"while({test},{','.join(body)})")
 
     def visit_IfExp(self, node):
-        self.generic_visit(node)
-
+        test = self.build_term(node.test)
+        body = self.build_term(node.body)
+        orelse = self.build_term(node.orelse)
+        self.data.append(f"ifexp({test},{body},{orelse})")
         
 

@@ -1,0 +1,18 @@
+import ast, subprocess
+from collectors.parseCode import parse_CodeU
+a1 = open("src/collectors/test_1.py")
+f1 = a1.read()
+a2 = open("src/collectors/test_2.py")
+f2 = a2.read()
+
+"""print(parse_CodeN(f1))
+print("===========")
+print(parse_CodeN(f2))"""
+
+problem = f"f({parse_CodeU(f1)}) =^= f({parse_CodeU(f2)})"
+print(parse_CodeU(f1))
+subprocess.run(
+    [
+        "java", "algoritmos/urau-src/src/at/jku/risc/stout/urau/AntiUnifyMain.java", "-a", problem
+    ]
+)

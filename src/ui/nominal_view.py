@@ -39,13 +39,14 @@ class NominalView:
         lines = self.field_lines.value or "-1"
         comm = self.field_comm.value or ""
         assoc = self.field_assoc.value or ""
+        #en estas últimas dos, por defecto son Add y Mult
 
         problem = f"{str(parse_CodeN(code1))} =^= {str(parse_CodeN(code2))}"
 
-        #si assoc y comm están vacíos
+        #si assoc ó comm están vacíos
         if not assoc:
             cmd = ["java", "-jar", "algoritmos/eqnauac-lib.jar",
-                "AU", mode, problem, "", "Add, Mult", "Add, Mult, " + comm, "true", "false", lines]
+                "AU", mode, problem, "", "Add, Mult, ", "Add, Mult, " + comm, "true", "false", lines]
         elif not comm:
             cmd = ["java", "-jar", "algoritmos/eqnauac-lib.jar",
                 "AU", mode, problem, "", "Add, Mult, " + assoc, "Add, Mult", "true", "false", lines]
