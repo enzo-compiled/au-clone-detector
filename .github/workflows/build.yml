@@ -15,6 +15,7 @@ jobs:
     name: Build ${{ matrix.name }}
     runs-on: ${{ matrix.runner }}
     strategy:
+      fail-fast: false
       matrix:
         include:
           - name: Linux
@@ -23,9 +24,6 @@ jobs:
           - name: Windows
             runner: windows-latest
             target: windows
-          - name: macOS
-            runner: macos-latest
-            target: macos
 
     steps:
       - name: Checkout
