@@ -9,7 +9,7 @@ f2 = a2.read()
 print("===========")
 print(parse_CodeN(f2))"""
 
-problem = f"f({parse_CodeN(f1)}) =^= f({parse_CodeN(f2)}"
+problem = f"{parse_CodeN(f1)}) =^= {parse_CodeN(f2)}"
 
 subprocess.run(
     [

@@ -57,7 +57,7 @@ class UnrankedView:
         mode  = self.comboBoxUModee.value
         iterate = self.check_iterate.value
 
-        problem = f"({parse_CodeU(code1)} =^= {parse_CodeU(code2)})"
+        problem = parse_CodeU(code1,code2)
 
         try:
             if iterate:

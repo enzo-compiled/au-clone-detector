@@ -9,12 +9,17 @@ class Collector(ast.NodeVisitor):
         self.const_counter = 1 #para atomos que son ctes
         self.var_map = {}
         self.var_counter = 1  #para átomos q son vars
+        self.abstraccion_cont = []
 
     def handle_variable(self, name):
         if name == "self":
+            if "cself" not in self.abstraccion_cont:
+                self.abstraccion_cont.append("cself")
             return "cself"
         if name not in self.var_map:
             self.var_map[name] = f"a{self.var_counter}"
+            self.abstraccion_cont.append(f"a{self.var_counter}")
+            #print(self.abstraccion_cont)
             self.var_counter += 1
         return self.var_map[name]
 
@@ -63,7 +68,7 @@ class Collector(ast.NodeVisitor):
         elif isinstance(node, ast.Attribute):
             value = self.build_term(node.value)
             attr_atom = self.handle_variable(node.attr)
-            return f"{attr_atom}.attr({value},{attr_atom})"
+            return f"attr({value},{attr_atom})"
 
         elif isinstance(node, ast.Return):
             if node.value:
@@ -84,14 +89,16 @@ class Collector(ast.NodeVisitor):
         elif isinstance(node, ast.Assign):
             t = self.build_term(node.targets[0])
             v = self.build_term(node.value)
-            return f"{t}.assign({t},{v})"
+            return f"assign({t},{v})"
         return ""
 
     #class ast.Assign(targets, value, type_comment)
     def visit_Assign(self, node):
         t = self.build_term(node.targets[0])
         v = self.build_term(node.value)
-        self.data.append(f"{t}.assign({t},{v})")
+        #self.abstraccion_cont.append(t)
+        #print(self.abstraccion_cont)
+        self.data.append(f"assign({t},{v})")
 
 
     #class ast.AugAssign(target, op, value)
@@ -107,6 +114,7 @@ class Collector(ast.NodeVisitor):
     #class ast.FunctionDef(name, args, body, decorator_list, returns, type_comment, type_params) 
     def visit_FunctionDef(self, node):
         args = [self.handle_variable(a.arg) for a in node.args.args]
+        #self.abstraccion_cont.append(args)
         body = [t for s in node.body if (t := self.build_term(s))]
         
         partes = args + body

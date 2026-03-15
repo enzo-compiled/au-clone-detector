@@ -8,3 +8,6 @@ class clase():
 
 variable = val
 nombre(variable)
+
+if variable:
+    print("exito")

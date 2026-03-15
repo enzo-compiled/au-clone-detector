@@ -9,8 +9,7 @@ f2 = a2.read()
 print("===========")
 print(parse_CodeN(f2))"""
 
-problem = f"f({parse_CodeU(f1)}) =^= f({parse_CodeU(f2)})"
-print(parse_CodeU(f1))
+problem = parse_CodeU(f1,f2)
 subprocess.run(
     [
         "java", "algoritmos/urau-src/src/at/jku/risc/stout/urau/AntiUnifyMain.java", "-a", problem

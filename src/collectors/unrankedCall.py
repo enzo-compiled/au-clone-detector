@@ -1,10 +1,28 @@
 import ast
 
 class Collector2(ast.NodeVisitor):
-    def __init__(self):
+    def __init__(self, offset = 1):
         self.data = []
         self.const_map = {}
-        self.const_counter = 1
+        self.const_counter = offset
+        self.var_map = {}
+        self.var_counter = offset
+
+    def handle_variable(self, name):
+        if name not in self.var_map:
+            self.var_map[name] = f"v{self.var_counter}"
+            self.var_counter += 1
+        return self.var_map[name]
+
+    def handle_constant(self, node): 
+        value = node.value
+
+        if value not in self.const_map:
+            name = f"c{self.const_counter}"
+            self.const_map[value] = name
+            self.const_counter += 1
+
+        return self.const_map[value]
 
     def build_term(self, node):
         if node is None:
@@ -14,7 +32,7 @@ class Collector2(ast.NodeVisitor):
             return self.handle_constant(node)
 
         elif isinstance(node, ast.Name):
-            return node.id
+            return self.handle_variable(node.id)
 
         elif isinstance(node, ast.BinOp): #ej 1 + 2 + 3 = Add(Add(1,2),3)
             left = self.build_term(node.left)
@@ -33,7 +51,10 @@ class Collector2(ast.NodeVisitor):
             return f"{op}(" + ",".join(values) + ")"
 
         elif isinstance(node, ast.Call):
-            func = self.build_term(node.func)
+            if isinstance(node.func, ast.Name):
+                func = node.func.id 
+            else:
+                func = self.build_term(node.func)
             args = [a for arg in node.args if (a := self.build_term(arg))]
             
             if not func: 
@@ -55,7 +76,7 @@ class Collector2(ast.NodeVisitor):
             return ""
 
         elif isinstance(node, ast.FunctionDef):
-            args = [a.arg for a in node.args.args]
+            args = [self.handle_variable(a.arg) for a in node.args.args]
             body = [t for s in node.body if (t := self.build_term(s))]
             partes = args + body
             return f"def_{node.name}({','.join(partes)})"
@@ -69,16 +90,6 @@ class Collector2(ast.NodeVisitor):
 
         return ""
 
-
-    def handle_constant(self, node): 
-        value = node.value
-
-        if value not in self.const_map:
-            name = f"{self.const_counter}"
-            self.const_map[value] = name
-            self.const_counter += 1
-
-        return self.const_map[value]
 
     #class ast.Assign(targets, value, type_comment)
     def visit_Assign(self, node):
@@ -98,11 +109,14 @@ class Collector2(ast.NodeVisitor):
 
     #class ast.FunctionDef(name, args, body, decorator_list, returns, type_comment, type_params) 
     def visit_FunctionDef(self, node):
-        args = [a.arg for a in node.args.args]
+        args = [self.handle_variable(a.arg) for a in node.args.args]
         body = [t for s in node.body if (t := self.build_term(s))]
-        self.data.append(f"def_{node.name}({','.join(args)}{','.join(body)})")
+        partes = args + body
+        self.data.append(f"def_{node.name}({','.join(partes)})")
 
     def visit_Expr(self, node):
+        if isinstance(node.value, ast.Constant):
+            return
         term = self.build_term(node.value)
         if term:
             self.data.append(term)
@@ -119,7 +133,6 @@ class Collector2(ast.NodeVisitor):
             self.data.append(f"return({v})")
         else:
             self.data.append("return()")
-        self.generic_visit(node)
 
     
     
