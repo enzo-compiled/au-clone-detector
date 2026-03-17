@@ -1,22 +1,22 @@
 import ast
 
 class Collector2(ast.NodeVisitor):
-    def __init__(self, offset = 1):
+    def __init__(self):
         self.data = []
         self.const_map = {}
-        self.const_counter = offset
+        self.const_counter = 1
         self.var_map = {}
-        self.var_counter = offset
+        self.var_counter = 1
 
     def handle_variable(self, name):
-        if name not in self.var_map:
+        """if name not in self.var_map:
             self.var_map[name] = f"v{self.var_counter}"
             self.var_counter += 1
-        return self.var_map[name]
+        return self.var_map[name]"""
+        return f"a{name}"
 
     def handle_constant(self, node): 
         value = node.value
-
         if value not in self.const_map:
             name = f"c{self.const_counter}"
             self.const_map[value] = name
@@ -63,7 +63,8 @@ class Collector2(ast.NodeVisitor):
         
         elif isinstance(node, ast.Attribute):
             value = self.build_term(node.value)
-            return f"{value}.{node.attr}"
+            attr = f"a{node.attr}"
+            return f"attr({value},{attr})"
 
         elif isinstance(node, ast.Expr):
             return self.build_term(node.value)
@@ -144,23 +145,23 @@ class Collector2(ast.NodeVisitor):
         body = [t for stmt in node.body if (t := self.build_term(stmt))]
         orelse = [t for stmt in node.orelse if (t := self.build_term(stmt))]
         partes = [test] + body + orelse
-        self.data.append(f"if({','.join(partes)})")
+        self.data.append(f"fif({','.join(partes)})")
 
     def visit_For(self, node):
         target = self.build_term(node.target)
         iterator = self.build_term(node.iter)
         body = [t for stmt in node.body if (t := self.build_term(stmt))]
-        self.data.append(f"for({target},{iterator},{','.join(body)})")
+        self.data.append(f"ffor({target},{iterator},{','.join(body)})")
 
     def visit_While(self, node):
         test = self.build_term(node.test)
         body = [t for stmt in node.body if (t := self.build_term(stmt))]
-        self.data.append(f"while({test},{','.join(body)})")
+        self.data.append(f"fwhile({test},{','.join(body)})")
 
     def visit_IfExp(self, node):
         test = self.build_term(node.test)
         body = self.build_term(node.body)
         orelse = self.build_term(node.orelse)
-        self.data.append(f"ifexp({test},{body},{orelse})")
+        self.data.append(f"fifexp({test},{body},{orelse})")
         
 

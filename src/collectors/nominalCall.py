@@ -16,12 +16,15 @@ class Collector(ast.NodeVisitor):
             if "cself" not in self.abstraccion_cont:
                 self.abstraccion_cont.append("cself")
             return "cself"
-        if name not in self.var_map:
+        """if name not in self.var_map:
             self.var_map[name] = f"a{self.var_counter}"
             self.abstraccion_cont.append(f"a{self.var_counter}")
             #print(self.abstraccion_cont)
             self.var_counter += 1
-        return self.var_map[name]
+        return self.var_map[name]"""
+        if not f"a{name}" in self.abstraccion_cont:
+            self.abstraccion_cont.append(f"a{name}")
+        return f"a{name}"
 
     def handle_constant(self, node):
         value = node.value
@@ -45,37 +48,46 @@ class Collector(ast.NodeVisitor):
             left = self.build_term(node.left)
             right = self.build_term(node.right)
             op = type(node.op).__name__
-            return f"{op}({left},{right})"
+            return f"o{op}({left},{right})"
 
         elif isinstance(node, ast.UnaryOp):
             operand = self.build_term(node.operand)
             op = type(node.op).__name__
-            return f"{op}({operand})"
+            return f"o{op}({operand})"
 
         elif isinstance(node, ast.BoolOp):
             values = [self.build_term(v) for v in node.values]
             op = type(node.op).__name__
             long = len(values)
-            return f"{op}_{long}(" + ",".join(values) + ")"
+            return f"o{op}_{long}(" + ",".join(values) + ")"
 
         elif isinstance(node, ast.Call):
-            func = self.build_term(node.func)
+            """func = self.build_term(node.func)
             args = [a for arg in node.args if (a := self.build_term(arg))]
             if not func: 
+                return "null"
+            return f"{func}({','.join(args)})"
+            """
+            if isinstance(node.func, ast.Name):
+                func = f"h{node.func.id}" 
+            else:
+                func = self.build_term(node.func)
+            args = [a for arg in node.args if (a := self.build_term(arg))]
+            if not func:
                 return "null"
             return f"{func}({','.join(args)})"
         
         elif isinstance(node, ast.Attribute):
             value = self.build_term(node.value)
             attr_atom = self.handle_variable(node.attr)
-            return f"attr({value},{attr_atom})"
+            return f"nattr({value},{attr_atom})"
 
         elif isinstance(node, ast.Return):
             if node.value:
                 v = self.build_term(node.value)
             else:
                 v = ""
-            return f"return({v})"
+            return f"nreturn({v})"
 
         elif isinstance(node, ast.Expr):
             return self.build_term(node.value)
@@ -84,12 +96,12 @@ class Collector(ast.NodeVisitor):
             args = [self.handle_variable(a.arg) for a in node.args.args]
             body = [t for s in node.body if (t := self.build_term(s))]
             partes = args + body
-            return f"def_{node.name}({','.join(partes)})"
+            return f"g{node.name}({','.join(partes)})"
         
         elif isinstance(node, ast.Assign):
             t = self.build_term(node.targets[0])
             v = self.build_term(node.value)
-            return f"assign({t},{v})"
+            return f"nassign({t},{v})"
         return ""
 
     #class ast.Assign(targets, value, type_comment)
@@ -98,7 +110,7 @@ class Collector(ast.NodeVisitor):
         v = self.build_term(node.value)
         #self.abstraccion_cont.append(t)
         #print(self.abstraccion_cont)
-        self.data.append(f"assign({t},{v})")
+        self.data.append(f"nassign({t},{v})")
 
 
     #class ast.AugAssign(target, op, value)
@@ -107,7 +119,7 @@ class Collector(ast.NodeVisitor):
         right = self.build_term(node.value)
         op = type(node.op).__name__
         if t and right:
-            self.data.append(f"{t}.assign({t},{op}({t},{right}))")
+            self.data.append(f"nassign({t},{op}({t},{right}))")
 
 
 
@@ -118,7 +130,7 @@ class Collector(ast.NodeVisitor):
         body = [t for s in node.body if (t := self.build_term(s))]
         
         partes = args + body
-        term = f"def_{node.name}({','.join(partes)})"
+        term = f"g{node.name}({','.join(partes)})"
         self.data.append(term)
 
     def visit_Expr(self, node):
@@ -131,7 +143,7 @@ class Collector(ast.NodeVisitor):
     #class ast.ClassDef(name, bases, keywords, body, decorator_list, type_params)
     def visit_ClassDef(self, node):
         body_terms = [t for stmt in node.body if (t := self.build_term(stmt))]
-        term = f"class_{node.name}({','.join(body_terms)})"
+        term = f"i{node.name}({','.join(body_terms)})"
         self.data.append(term)
 
 
@@ -144,7 +156,7 @@ class Collector(ast.NodeVisitor):
         orelse = [t for stmt in node.orelse if (t := self.build_term(stmt))]
         
         partes = [test] + body + orelse
-        term = f"if({','.join(partes)})"
+        term = f"nif({','.join(partes)})"
         self.data.append(term)
 
 
@@ -154,7 +166,7 @@ class Collector(ast.NodeVisitor):
         iterator = self.build_term(node.iter)
         body = [t for stmt in node.body if (t := self.build_term(stmt))]
 
-        term = f"for({target},{iterator},{','.join(body)})"
+        term = f"nfor({target},{iterator},{','.join(body)})"
         self.data.append(term)
 
 
@@ -163,5 +175,5 @@ class Collector(ast.NodeVisitor):
         test = self.build_term(node.test)
         body = [t for stmt in node.body if (t := self.build_term(stmt))]
 
-        term = f"while({test},{','.join(body)})"
+        term = f"nwhile({test},{','.join(body)})"
         self.data.append(term) 

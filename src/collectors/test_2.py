@@ -1,13 +1,10 @@
-val = (1 + 2 + 3)
-def nombre(value):
-    print("es valor es:", value)
+u = (1 + 2 + 3)
+def f(v1):
+    print("es valor es:", v1)
 
-class clase():
+class hola():
     def __init__(self):
         self.data = 10
 
-variable = val
-nombre(variable)
-
-if variable:
-    print("exito")
+var = u
+f(var)
