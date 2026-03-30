@@ -46,10 +46,10 @@ class NominalView:
         #si assoc ó comm están vacíos
         if not assoc:
             cmd = ["java", "-jar", "algoritmos/eqnauac-lib.jar",
-                "AU", mode, problem, "", "Add, Mult, ", "Add, Mult, " + comm, "true", "false", lines]
+                "AU", mode, problem, "", "oAdd, oMult, ", "oAdd, oMult, " + comm, "true", "false", lines]
         elif not comm:
             cmd = ["java", "-jar", "algoritmos/eqnauac-lib.jar",
-                "AU", mode, problem, "", "Add, Mult, " + assoc, "Add, Mult", "true", "false", lines]
+                "AU", mode, problem, "", "oAdd, oMult, " + assoc, "oAdd, oMult", "true", "false", lines]
 
         try:
             result = subprocess.run(cmd,capture_output=True,text=True)

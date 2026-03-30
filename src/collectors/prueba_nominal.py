@@ -7,7 +7,7 @@ from collectors.parseCode import parse_CodeN
     print("exito")"""
 a1 = open("src/collectors/test_2.py")
 f1 = a1.read()
-a2 = open("src/collectors/test_3.py")
+a2 = open("src/collectors/test_2.py")
 f2 = a2.read()
 
 """print(parse_CodeN(f1))
