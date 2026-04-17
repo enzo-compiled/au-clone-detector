@@ -1,4 +1,4 @@
-# NauCloneDetector app
+# AuCloneDetector app
 
 ## Run the app
 
