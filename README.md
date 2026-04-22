@@ -48,6 +48,11 @@ Run as a desktop app:
 ```bash
 uv run flet run
 ```
+If you have troubles:
+```bash
+cd src/
+python ./main.py
+```
 
 ### Linux
 
