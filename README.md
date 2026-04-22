@@ -72,8 +72,12 @@ flet build windows -v
 
 For more details on building Windows package, refer to the [Windows Packaging Guide](https://docs.flet.dev/publish/windows/).
 
-# Sources
+## Sources and References
 
 - You can check out this [link](https://www3.risc.jku.at/projects/stout/library.html) the **Library of Unification and Anti-Unification Algorithms**
 - For Nominal algorithm, there is this [web app](https://nau-eq.web.app/index.html), developed in the java language, and the paper [Nominal Anti-Unification Modulo Equational Theories](https://nau-eq.web.app/preprint_jlamp.pdf) for **Alexander Baumgartner and Daniele Nantes-Sobrinho**, 2025.
-- For the Unranked algorithm, there's also a [web app](https://www3.risc.jku.at/projects/stout/software/antiunify.php) (developed in java too) based in the paper [Anti-Unification for Unranked Terms and Hedges](http://link.springer.com/content/pdf/10.1007%2Fs10817-013-9285-6.pdf), by Temur Kutsia, Jordi Levy, Mateu Villaret, 2014.
+- For the Unranked algorithm, there's also a [web app](https://www3.risc.jku.at/projects/stout/software/antiunify.php) (developed in java too) based in the paper [Anti-Unification for Unranked Terms and Hedges](http://link.springer.com/content/pdf/10.1007%2Fs10817-013-9285-6.pdf), by **Temur Kutsia, Jordi Levy, Mateu Villaret**, 2014.
+
+---
+
+_Made by Enzo Vásquez C._
