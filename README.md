@@ -54,6 +54,8 @@ cd src/
 python ./main.py
 ```
 
+## Build
+
 ### Linux
 
 ```bash
